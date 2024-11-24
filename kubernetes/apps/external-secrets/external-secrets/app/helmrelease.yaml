@@ -20,9 +20,9 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: bitwarden-secrets-manager
-      namespace: external-secrets
+  # dependsOn:
+  #   - name: bitwarden-secrets-manager
+  #     namespace: external-secrets
   values:
     installCRDs: true
     image:
