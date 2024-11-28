@@ -52,19 +52,19 @@ data:
             description: Cloudflared Tunnel Status
             widget:
               type: cloudflared
-              accountid: {{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNTID}}
-              tunnelid: {{HOMEPAGE_VAR_CLOUDFLARED_TUNNELID}}
-              key: {{HOMEPAGE_VAR_CLOUDFLARED_API_TOKEN}}
+              accountid: ac3f4399cd7d405084def1e2bbbd187f
+              tunnelid: 0015ed2b-b160-4e42-85ee-1e1a0fa90dc3
+              key: 6edP2asJNkgI-Agr7ytAOFHdcLidsBlIwPT2WNzh
               fields: ["status"]
-        - Healthchecks:
-            href: https://healthchecks.io/
-            icon: healthchecks.png
-            description: Healthchecks Internet Uptime
+        - AdGuard Home:
+            href: https://adguard.${SECRET_DOMAIN}
+            icon: adguard-home.png
+            description: Adguard Home Status
             widget:
-              type: healthchecks
-              url: https://healthchecks.io/
-              key: {{HOMEPAGE_VAR_HEALTHCHECK_TOKEN}}
-              uuid: {{HOMEPAGE_VAR_HEALTHCHECK_UUID}}
+              type: adguard
+              url: https://adguard.${SECRET_DOMAIN}
+              username: admin
+              password: backup
         - Unifi:
             href: https://unifi.ui.com
             icon: unifi.png
@@ -111,14 +111,14 @@ data:
                   service_name: Readarr # service name for that widget
     - Infrastructure:
         - Portainer:
-            href: &url https://portainer.${SECRET_DOMAIN}
+            href: &url http://192.168.5.5:9002
             icon: portainer.png
             description: Docker Container Management
             widget:
               type: portainer
-              url: http://voyager.internal:9090
-              env: 1
-              key: {{HOMEPAGE_VAR_PORTAINER_TOKEN}}
+              url: http://192.168.5.5:9002
+              env: 2
+              key: ptr_v9mrSg4g/6Qz/epPVugK8akVgkE46CDTX2IsUjAHIlo=
         - Unraid:
             href: https://nas.${SECRET_DOMAIN}
             icon: unraid.png
@@ -183,10 +183,6 @@ data:
         columns: 3
         icon: mdi-download-circle
   widgets.yaml: |
-    - search:
-        provider: [duckduckgo, google]
-        focus: false
-        target: _blank
     - kubernetes:
         cluster:
           cpu: true
