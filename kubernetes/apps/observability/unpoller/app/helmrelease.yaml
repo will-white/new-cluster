@@ -1,0 +1,80 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app unpoller
+spec:
+  chart:
+    spec:
+      chart: app-template
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      version: 3.5.1
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: observability
+  install:
+    remediation:
+      retries: 3
+  interval: 30m
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+      strategy: rollback
+  values:
+    controllers:
+      unpoller:
+        containers:
+          app:
+            env:
+              TZ: ${TIMEZONE}
+              UP_INFLUXDB_DISABLE: true
+              UP_PROMETHEUS_HTTP_LISTEN: 0.0.0.0:80
+              UP_UNIFI_DEFAULT_ROLE: home-ops
+              UP_UNIFI_DEFAULT_URL: https://unifi.${SECRET_DOMAIN}
+            envFrom:
+              - secretRef:
+                  name: unpoller-secret
+            image:
+              repository: ghcr.io/unpoller/unpoller
+              tag: v2.11.2@sha256:73b39c0b3b8fa92aa82a7613d3486253ffbd8c057833b4621402a268159bf2a2
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              limits:
+                memory: 128Mi
+              requests:
+                cpu: 10m
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+              readOnlyRootFilesystem: true
+    defaultPodOptions:
+      securityContext:
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+        seccompProfile:
+          type: RuntimeDefault
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 80
+    serviceMonitor:
+      app:
+        endpoints:
+          - interval: 2m
+            path: /metrics
+            port: http
+            scheme: http
+            scrapeTimeout: 10s
+        serviceName: *app

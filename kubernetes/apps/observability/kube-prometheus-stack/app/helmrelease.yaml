@@ -1,0 +1,174 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+spec:
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: flux-system
+      version: 66.3.0
+  dependsOn:
+    - name: prometheus-operator-crds
+      namespace: observability
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  install:
+    crds: Skip
+    remediation:
+      retries: 3
+  interval: 30m
+  timeout: 15m
+  upgrade:
+    cleanupOnFail: true
+    crds: Skip
+    remediation:
+      retries: 3
+      strategy: rollback
+  values:
+    additionalPrometheusRulesMap:
+      dockerhub-rules:
+        groups:
+          - name: dockerhub
+            rules:
+              - alert: DockerhubRateLimitRisk
+                annotations:
+                  summary: Kubernetes cluster Dockerhub rate limit risk
+                expr: count(time() - container_last_seen{image=~"(docker.io).*",container!=""} < 30) > 100
+                labels:
+                  severity: critical
+      oom-rules:
+        groups:
+          - name: oom
+            rules:
+              - alert: OomKilled
+                annotations:
+                  summary: Container {{ $labels.container }} in pod {{ $labels.namespace }}/{{ $labels.pod }} has been OOMKilled {{ $value }} times in the last 10 minutes.
+                expr: (kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 10m >= 1) and ignoring (reason) min_over_time(kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}[10m]) == 1
+                labels:
+                  severity: critical
+      zfs-rules:
+        groups:
+          - name: zfs
+            rules:
+              - alert: ZfsUnexpectedPoolState
+                annotations:
+                  summary: ZFS pool {{$labels.zpool}} on {{$labels.instance}} is in a unexpected state {{$labels.state}}
+                expr: node_zfs_zpool_state{state!="online"} > 0
+                labels:
+                  severity: critical
+    # alertmanager:
+    #   alertmanagerSpec:
+    #     configSecret: alertmanager-secret
+    #     storage:
+    #       volumeClaimTemplate:
+    #         spec:
+    #           resources:
+    #             requests:
+    #               storage: 1Gi
+    #           storageClassName: ceph-block
+    #     useExistingSecret: true
+    #   ingress:
+    #     annotations:
+    #       external-dns.alpha.kubernetes.io/target: internal.${SECRET_DOMAIN}
+    #     enabled: true
+    #     hosts:
+    #       - alertmanager.${SECRET_DOMAIN}
+    #     ingressClassName: internal
+    #     pathType: Prefix
+    cleanPrometheusOperatorObjectNames: true
+    crds:
+      enabled: false
+    grafana:
+      enabled: false
+      forceDeployDashboards: true
+    kube-state-metrics:
+      fullnameOverride: kube-state-metrics
+      metricLabelsAllowlist:
+        - pods=[*]
+        - deployments=[*]
+        - persistentvolumeclaims=[*]
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
+              targetLabel: kubernetes_node
+    kubeApiServer:
+      serviceMonitor:
+        selector:
+          k8s-app: kube-apiserver
+    kubeControllerManager:
+      service: &ref_0
+        selector:
+          k8s-app: kube-controller-manager
+    kubeEtcd:
+      service: *ref_0
+    kubeProxy:
+      enabled: false
+    kubeScheduler:
+      service:
+        selector:
+          k8s-app: kube-scheduler
+    prometheus:
+      ingress:
+        annotations:
+          external-dns.alpha.kubernetes.io/target: internal.${SECRET_DOMAIN}
+          gethomepage.dev/app: prometheus
+          gethomepage.dev/description: Monitoring Scrape Service
+          gethomepage.dev/enabled: 'true'
+          gethomepage.dev/group: Observability
+          gethomepage.dev/icon: prometheus.png
+          gethomepage.dev/name: Prometheus
+          gethomepage.dev/widget.type: prometheus
+          gethomepage.dev/widget.url: http://kube-prometheus-stack-prometheus.observability:9090
+        enabled: true
+        hosts:
+          - prometheus.${SECRET_DOMAIN}
+        ingressClassName: internal
+        pathType: Prefix
+      prometheusSpec:
+        enableAdminAPI: true
+        enableFeatures:
+          - auto-gomemlimit
+          - memory-snapshot-on-shutdown
+          - new-service-discovery-manager
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
+        resources:
+          limits:
+            memory: 1500Mi
+          requests:
+            cpu: 100m
+        retention: 14d
+        retentionSize: 50GB
+        ruleSelectorNilUsesHelmValues: false
+        scrapeConfigSelectorNilUsesHelmValues: false
+        scrapeInterval: 1m
+        serviceMonitorSelectorNilUsesHelmValues: false
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              resources:
+                requests:
+                  storage: 50Gi
+              storageClassName: ceph-block
+        walCompression: true
+    prometheus-node-exporter:
+      fullnameOverride: node-exporter
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
+              targetLabel: kubernetes_node
