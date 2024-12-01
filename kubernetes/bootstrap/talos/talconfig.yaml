@@ -25,8 +25,7 @@ cniConfig:
 nodes:
   - hostname: "mj0583jp"
     ipAddress: "192.168.5.40"
-    installDiskSelector:
-      serial: "50026B7686C2A3AB"
+    installDisk: "/dev/sda"
     talosImageURL: factory.talos.dev/installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
     controlPlane: true
     networkInterfaces:
@@ -43,8 +42,7 @@ nodes:
           ip: "192.168.5.45"
   - hostname: "mj0581m7"
     ipAddress: "192.168.5.41"
-    installDiskSelector:
-      serial: "50026B7686C29DD6"
+    installDisk: "/dev/sda"
     talosImageURL: factory.talos.dev/installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
     controlPlane: true
     networkInterfaces:
@@ -61,8 +59,7 @@ nodes:
           ip: "192.168.5.45"
   - hostname: "mj0583eq"
     ipAddress: "192.168.5.42"
-    installDiskSelector:
-      serial: "50026B7686C2A394"
+    installDisk: "/dev/sda"
     talosImageURL: factory.talos.dev/installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
     controlPlane: true
     networkInterfaces:
@@ -79,8 +76,7 @@ nodes:
           ip: "192.168.5.45"
   - hostname: "mj05ajfj"
     ipAddress: "192.168.5.50"
-    installDiskSelector:
-      serial: "50026B7686C29DC7"
+    installDisk: "/dev/sda"
     talosImageURL: factory.talos.dev/installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
     controlPlane: false
     networkInterfaces:
@@ -95,8 +91,7 @@ nodes:
         mtu: 1500
   - hostname: "mj04ew44"
     ipAddress: "192.168.5.51"
-    installDiskSelector:
-      serial: "50026B7686C2A39D"
+    installDisk: "/dev/sda"
     talosImageURL: factory.talos.dev/installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
     controlPlane: false
     networkInterfaces:
@@ -111,8 +106,7 @@ nodes:
         mtu: 1500
   - hostname: "mj0581rw"
     ipAddress: "192.168.5.52"
-    installDiskSelector:
-      serial: "50026B7686C2A492"
+    installDisk: "/dev/sda"
     talosImageURL: factory.talos.dev/installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
     controlPlane: false
     networkInterfaces:
@@ -127,8 +121,7 @@ nodes:
         mtu: 1500
   - hostname: "mj04968e"
     ipAddress: "192.168.5.53"
-    installDiskSelector:
-      serial: "50026B7686C2AC14"
+    installDisk: "/dev/sda"
     talosImageURL: factory.talos.dev/installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
     controlPlane: false
     networkInterfaces:
@@ -143,8 +136,7 @@ nodes:
         mtu: 1500
   - hostname: "mj05g4ub"
     ipAddress: "192.168.5.54"
-    installDiskSelector:
-      serial: "50026B7686C2A46C"
+    installDisk: "/dev/sda"
     talosImageURL: factory.talos.dev/installer/376567988ad370138ad8b2698212367b8edcb69b5fd68c80be1f2ec7d603b4ba
     controlPlane: false
     networkInterfaces:

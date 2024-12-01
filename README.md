@@ -23,27 +23,6 @@ The features included will depend on the type of configuration you want to use. 
 - A [Renovate](https://www.mend.io/renovate)-ready repository with pull request diffs provided by [flux-local](https://github.com/allenporter/flux-local)
 - Integrated [GitHub Actions](https://github.com/features/actions) with helpful workflows.
 
-## 💻 Machine Preparation
-
-### System requirements
-
-> [!NOTE]
-> 1. The included behaviour of Talos is that all nodes are able to run workloads, **including** the controller nodes. **Worker nodes** are therefore **optional**.
-> 2. Do you have 3 or more nodes? It is highly recommended to make 3 of them controller nodes for a highly available control plane.
-> 3. Running the cluster on Proxmox VE? My thoughts and recommendations about that are documented [here](https://onedr0p.github.io/home-ops/notes/proxmox-considerations.html).
-
-| Role    | Cores    | Memory        | System Disk               |
-|---------|----------|---------------|---------------------------|
-| Control | 4 _(6*)_ | 8GB _(24GB*)_ | 120GB _(500GB*)_ SSD/NVMe |
-| Worker  | 4 _(6*)_ | 8GB _(24GB*)_ | 120GB _(500GB*)_ SSD/NVMe |
-| _\* recommended_ |
-
-1. Head over to <https://factory.talos.dev> and follow the instructions which will eventually lead you to download a Talos Linux iso file (or for SBCs the `.raw.xz`). Make sure to note the schematic ID you will need this later on.
-
-2. Flash the iso or raw file to a USB drive and boot to Talos on your nodes with it.
-
-3. Continue on to 🚀 [**Getting Started**](#-getting-started)
-
 ## 🚀 Getting Started
 
 Once you have installed Talos on your nodes, there are six stages to getting a Flux-managed cluster up and running.
@@ -71,55 +50,6 @@ You have two different options for setting up your local workstation.
 1. Start Docker and open your repository in VSCode. There will be a pop-up asking you to use the `devcontainer`, click the button to start using it.
 
 2. Continue on to 🔧 [**Stage 3**](#-stage-3-bootstrap-configuration)
-
-#### Non-devcontainer method
-
-1. Install the most recent version of [task](https://taskfile.dev/) and [direnv](https://direnv.net/)
-
-    ```sh
-    # Homebrew
-    brew install direnv go-task
-    # or, Arch
-    pacman -S --noconfirm direnv go-task \
-      && ln -sf /usr/bin/go-task /usr/local/bin/task
-    ```
-
-2. [Hook `direnv` into your preferred shell](https://direnv.net/docs/hook.html), then run:
-
-    ```sh
-    task workstation:direnv
-    ```
-
-    📍 _**Verify** that `direnv` is setup properly by opening a new terminal and `cd`ing into your repository. You should see something like:_
-
-    ```sh
-    cd /path/to/repo
-    direnv: loading ... .envrc
-    direnv: export +VIRTUAL_ENV ... ~PATH
-    ```
-
-3. Install the additional **required** CLI tools
-
-   📍 _**Not using Homebrew or ArchLinux?** Try using the generic Linux task below, if that fails check out the [Brewfile](.taskfiles/workstation/Brewfile)/[Archfile](.taskfiles/workstation/Archfile) for what CLI tools needed and install them._
-
-    ```sh
-    # Homebrew
-    task workstation:brew
-    # or, Arch with yay/paru
-    task workstation:arch
-    # or, Generic Linux (YMMV, this pulls binaires in to ./bin)
-    task workstation:generic-linux
-    ```
-
-4. Setup a Python virual environment by running the following task command.
-
-    📍 _This commands requires Python 3.11+ to be installed._
-
-    ```sh
-    task workstation:venv
-    ```
-
-5. Continue on to 🔧 [**Stage 3**](#-stage-3-bootstrap-configuration)
 
 ### 🔧 Stage 3: Bootstrap configuration
 
