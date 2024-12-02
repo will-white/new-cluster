@@ -91,6 +91,20 @@ spec:
                 - matchExpressions:
                     - key: node-role.kubernetes.io/control-plane
                       operator: Exists
+      resources:
+        mon:
+          limits:
+            memory: 1Gi
+          requests:
+            cpu: 50m
+            memory: 512Mi
+        osd:
+          limits:
+            cpu: 700m
+            memory: 5Gi
+          requests:
+            cpu: 300m
+            memory: 512Mi
       storage:
         config:
           osdsPerDevice: '1'
