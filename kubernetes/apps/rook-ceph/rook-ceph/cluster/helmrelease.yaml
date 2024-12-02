@@ -85,12 +85,21 @@ spec:
                       operator: Exists
         mon: *ref_0
         osd:
-          nodeAntiAffinity:
+          nodeAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
               nodeSelectorTerms:
                 - matchExpressions:
                     - key: node-role.kubernetes.io/control-plane
-                      operator: Exists
+                      operator: NotIn
+      # resources:
+      #   mon:
+      #     requests:
+      #       cpu: 50m
+      #       memory: 512Mi
+      #   osd:
+      #     requests:
+      #       cpu: 300m
+      #       memory: 512Mi
       storage:
         config:
           osdsPerDevice: '1'
