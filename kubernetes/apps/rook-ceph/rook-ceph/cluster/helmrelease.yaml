@@ -85,62 +85,12 @@ spec:
                       operator: Exists
         mon: *ref_0
         osd:
-          nodeAffinity:
+          nodeAntiAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
               nodeSelectorTerms:
                 - matchExpressions:
                     - key: node-role.kubernetes.io/control-plane
-                      operator: NotIn
-      resources:
-        cleanup:
-          limits:
-            memory: 1Gi
-          requests:
-            cpu: 250m
-            memory: 100Mi
-        crashcollector:
-          limits:
-            memory: 128Mi
-          requests:
-            cpu: 15m
-            memory: 64Mi
-        logcollector:
-          limits:
-            memory: 1Gi
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        mgr:
-          limits:
-            cpu: 500m
-            memory: 1Gi
-          requests:
-            cpu: 125m
-            memory: 512Mi
-        mgr-sidecar:
-          limits:
-            memory: 200Mi
-          requests:
-            cpu: 50m
-            memory: 100Mi
-        mon:
-          limits:
-            memory: 1Gi
-          requests:
-            cpu: 50m
-            memory: 512Mi
-        osd:
-          limits:
-            memory: 6Gi
-          requests:
-            cpu: 300m
-            memory: 512Mi
-        prepareosd:
-          limits:
-            memory: 2Gi
-          requests:
-            cpu: 250m
-            memory: 50Mi
+                      operator: Exists
       storage:
         config:
           osdsPerDevice: '1'
