@@ -89,8 +89,10 @@ spec:
             requiredDuringSchedulingIgnoredDuringExecution:
               nodeSelectorTerms:
                 - matchExpressions:
-                    - key: node-role.kubernetes.io/control-plane
-                      operator: NotIn
+                    - key: role
+                      operator: In
+                      values:
+                      - worker
       # resources:
       #   mon:
       #     requests:
