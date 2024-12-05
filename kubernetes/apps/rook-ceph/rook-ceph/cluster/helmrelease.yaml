@@ -89,10 +89,8 @@ spec:
             requiredDuringSchedulingIgnoredDuringExecution:
               nodeSelectorTerms:
                 - matchExpressions:
-                    - key: role
-                      operator: In
-                      values:
-                      - worker
+                  - key: node-role.kubernetes.io/worker
+                    operator: Exists
       # resources:
       #   mon:
       #     requests:
