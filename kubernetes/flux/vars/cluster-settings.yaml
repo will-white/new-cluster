@@ -5,3 +5,9 @@ metadata:
   namespace: flux-system
 data:
   TIMEZONE: "America/Denver"
+  POSTGRES_LB: 192.168.5.35
+  EMQX_LB: 192.168.5.30
+  UNIFI_LB: 192.168.5.15
+  GO2RTC_LB: 192.168.5.25
+  S3_URI: http://192.168.5.20:9000
+
