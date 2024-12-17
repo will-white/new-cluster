@@ -12,7 +12,6 @@ spec:
         kind: HelmRepository
         name: piraeus
         namespace: flux-system
-  maxHistory: 2
   install:
     crds: CreateReplace
     remediation:
@@ -23,3 +22,8 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
+  values:
+    controller:
+      replicaCount: 2
+      serviceMonitor:
+        create: true
