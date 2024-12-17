@@ -10,7 +10,7 @@ spec:
         kind: HelmRepository
         name: prometheus-community
         namespace: flux-system
-      version: 16.0.1
+      version: 17.0.0
   install:
     remediation:
       retries: 3
