@@ -41,6 +41,9 @@ data:
         - home-ops:
             - icon: github.png
               href: 'https://github.com/joryirving/home-ops'
+        - dashboard-icons:
+            - icon: github.png
+              href: 'https://github.com/walkxcode/dashboard-icons/blob/main/ICONS.md'
   docker.yaml: ''
   kubernetes.yaml: |
     mode: cluster
@@ -62,7 +65,7 @@ data:
             description: Adguard Home Status
             widget:
               type: adguard
-              url: https://adguard.${SECRET_DOMAIN}
+              url: https://192.168.5.2
               username: admin
               password: backup
         - Unifi:
@@ -71,28 +74,9 @@ data:
             description: Unifi Dashboard
             widget:
               type: unifi
-              url: https://unifi.${SECRET_DOMAIN}
-              username: {{HOMEPAGE_VAR_UNIFI_USERNAME}}
-              password: {{HOMEPAGE_VAR_UNIFI_PASSWORD}}
-    - Games:
-        - Create:
-            icon: minecraft.png
-            description: Create Server
-            widget:
-              type: minecraft
-              url: udp://minecraft-create-minecraft.games:25565
-        - Takocraft:
-            icon: minecraft.png
-            description: Takocraft Server
-            widget:
-              type: minecraft
-              url: udp://minecraft-takocraft-minecraft.games:25565
-        - Vibecraft:
-            icon: minecraft.png
-            description: Vibecraft Server
-            widget:
-              type: minecraft
-              url: udp://minecraft-vibecraft-minecraft.games:25565
+              url: https://unifi.default.svc.cluster.local
+              username: unpoller
+              password: Congenial-Docile-Residency9
     - Calendar:
         - Agenda:
             widget:
@@ -119,10 +103,18 @@ data:
               url: http://192.168.5.5:9002
               env: 2
               key: ptr_v9mrSg4g/6Qz/epPVugK8akVgkE46CDTX2IsUjAHIlo=
-        - Unraid:
+        - TrueNAS:
             href: https://nas.${SECRET_DOMAIN}
-            icon: unraid.png
-            description: Unraid NAS
+            icon: truenas-core.png
+            description: NAS
+            widget:
+              type: truenas
+              url: http://192.168.5.20
+              username: truenas_admin
+              password: backup
+              # key: yourtruenasapikey # not required if using username / password
+              enablePools: true # optional, defaults to false
+              nasType: scale # defaults to scale, must be set to 'core' if using enablePools with TrueNAS Core
     - Home:
         - Home-Assistant:
             href: https://hass.${SECRET_DOMAIN}
@@ -130,8 +122,8 @@ data:
             description: Home Automation Software
             widget:
               type: homeassistant
-              url: https://hass.${SECRET_DOMAIN}
-              key: {{HOMEPAGE_VAR_HASS_TOKEN}}
+              url: http://home-assistant.default.svc.cluster.local:8123
+              key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5OTVmYWQ2MDIyNjc0MTU1ODlmYWZlYzAyMWY4ODEzNCIsImlhdCI6MTczNDYwMzgxMCwiZXhwIjoyMDQ5OTYzODEwfQ.hoMH1D1mZp1CO6VZY4cqZfoOPE0hVPKhMyOZCYRtNrg
   settings.yaml: |
     title: Dashboard
     favicon: https://github.com/walkxcode/dashboard-icons/blob/main/png/heimdall.png
