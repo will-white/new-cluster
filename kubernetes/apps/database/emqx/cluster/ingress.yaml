@@ -2,6 +2,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: emqx-dashboard
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Infrastructure
+    gethomepage.dev/name: EMQX
+    gethomepage.dev/description: MQTT broker
+    gethomepage.dev/icon: emqx.png
 spec:
   ingressClassName: internal
   rules:
