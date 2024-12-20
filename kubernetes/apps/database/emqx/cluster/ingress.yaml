@@ -8,6 +8,7 @@ metadata:
     gethomepage.dev/name: EMQX
     gethomepage.dev/description: MQTT broker
     gethomepage.dev/icon: emqx.png
+    gethomepage.dev/pod-selector: apps.emqx.io/managed-by=emqx-operator
 spec:
   ingressClassName: internal
   rules:

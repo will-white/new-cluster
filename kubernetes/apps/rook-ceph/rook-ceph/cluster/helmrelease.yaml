@@ -213,6 +213,7 @@ spec:
           gethomepage.dev/group: Infrastructure
           gethomepage.dev/icon: rook.png
           gethomepage.dev/name: Rook/Ceph
+          gethomepage.dev/pod-selector: mgr=a
         host:
           name: rook.${SECRET_DOMAIN}
           path: /
