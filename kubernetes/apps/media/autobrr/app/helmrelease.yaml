@@ -80,6 +80,15 @@ spec:
             port: *port
     ingress:
       app:
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: Downloads
+          gethomepage.dev/name: Autobrr
+          gethomepage.dev/icon: autobrr.png
+          gethomepage.dev/description: monitors IRC channels and/or RSS feeds for new torrents that fits your criteria set within your autobrr filters
+          gethomepage.dev/widget.type: autobrr
+          gethomepage.dev/widget.url: http://autobrr.media
+          gethomepage.dev/widget.key: blah
         className: internal
         hosts:
           - host: "{{ .Release.Name }}.${SECRET_DOMAIN}"
