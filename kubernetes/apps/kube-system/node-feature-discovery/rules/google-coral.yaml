@@ -1,0 +1,14 @@
+apiVersion: nfd.k8s-sigs.io/v1alpha1
+kind: NodeFeatureRule
+metadata:
+  name: intel-gpu-device
+spec:
+  rules:
+    - name: coral-tpu
+      labels:
+        google.feature.node.kubernetes.io/tpu: "true"
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            class: { op: In, value: ["0880"] }
+            vendor: { op: In, value: ["1ac1"] }
