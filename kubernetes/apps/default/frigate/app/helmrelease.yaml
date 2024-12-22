@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: &app frigate
-  namespace: default
 spec:
   interval: 30m
   chart:
@@ -15,7 +14,6 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  maxHistory: 2
   install:
     remediation:
       retries: 3
@@ -24,15 +22,15 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   dependsOn:
-    - name: emqx-cluster
+    - name: emqx
       namespace: database
-    - name: external-secrets-stores
     - name: intel-device-plugin-gpu
+      namespace: kube-system
     - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: volsync
+      namespace: volsync-system
   values:
     defaultPodOptions:
       nodeSelector:
@@ -73,6 +71,9 @@ spec:
                 cpu: 10m
                 memory: 1000Mi
                 gpu.intel.com/i915: 1
+              limits:
+                gpu.intel.com/i915: 1
+                memory: 8192Mi
             securityContext:
               privileged: true
     service:
@@ -93,10 +94,11 @@ spec:
           gethomepage.dev/description: NVR with realtime local object detection for IP cameras
           gethomepage.dev/group: Applications
           gethomepage.dev/icon: frigate.png
-          gethomepage.dev/href: https://frigate.${SECRET_EXTERNAL_DOMAIN}
-        className: nginx
+          gethomepage.dev/href: http://frigate.default
+        className: internal
+        enabled: true
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_EXTERNAL_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
@@ -116,7 +118,7 @@ spec:
         name: frigate-configmap
         globalMounts:
           - path: /config/config.yaml
-            subPath: config.yml
+            subPath: config.yaml
             readOnly: true
       media:
         type: nfs
