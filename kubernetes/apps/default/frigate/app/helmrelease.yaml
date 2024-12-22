@@ -1,0 +1,140 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app frigate
+  namespace: default
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: emqx-cluster
+      namespace: database
+    - name: external-secrets-stores
+    - name: intel-device-plugin-gpu
+    - name: rook-ceph-cluster
+    - name: volsync
+  values:
+    defaultPodOptions:
+      nodeSelector:
+        # google.feature.node.kubernetes.io/coral: "true"
+        intel.feature.node.kubernetes.io/gpu: "true"
+    controllers:
+      frigate:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/blakeblackshear/frigate
+              tag: 0.14.0-rc1
+            env:
+              TZ: ${TIMEZONE}
+              LIBVA_DRIVER_NAME: i965
+            envFrom:
+              - secretRef:
+                  name: frigate-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/version
+                    port: &port 5000
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 10m
+                memory: 1000Mi
+                gpu.intel.com/i915: 1
+            securityContext:
+              privileged: true
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: *port
+          rtmp:
+            port: 1935
+          rtsp:
+            port: 8554
+    ingress:
+      app:
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/name: Frigate
+          gethomepage.dev/description: NVR with realtime local object detection for IP cameras
+          gethomepage.dev/group: Applications
+          gethomepage.dev/icon: frigate.png
+          gethomepage.dev/href: https://frigate.${SECRET_EXTERNAL_DOMAIN}
+        className: nginx
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_EXTERNAL_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      config:
+        enabled: true
+        existingClaim: *app
+        globalMounts:
+          - path: /data
+      config-file:
+        type: configMap
+        name: frigate-configmap
+        globalMounts:
+          - path: /config/config.yaml
+            subPath: config.yml
+            readOnly: true
+      media:
+        type: nfs
+        server: 192.168.5.20
+        path: /mnt/main/frigate
+        globalMounts:
+          - path: /media/frigate
+      cache:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 4Gi
+        globalMounts:
+          - path: /dev/shm
+      # usb:
+      #   type: hostPath
+      #   hostPath: /dev/bus/usb
+      #   hostPathType: Directory
+      #   advancedMounts:
+      #     frigate:
+      #       app:
+      #         - path: /dev/bus/usb
