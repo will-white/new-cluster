@@ -44,7 +44,7 @@ data:
         - dashboard-icons:
             - icon: github.png
               href: 'https://github.com/walkxcode/dashboard-icons/blob/main/ICONS.md'
-  docker.yaml: ''
+  docker.yaml: ""
   kubernetes.yaml: |
     mode: cluster
   services.yaml: |
@@ -55,9 +55,9 @@ data:
             description: Cloudflared Tunnel Status
             widget:
               type: cloudflared
-              accountid: ac3f4399cd7d405084def1e2bbbd187f
-              tunnelid: 0015ed2b-b160-4e42-85ee-1e1a0fa90dc3
-              key: 6edP2asJNkgI-Agr7ytAOFHdcLidsBlIwPT2WNzh
+              accountid: {{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNTID}}
+              tunnelid: {{HOMEPAGE_VAR_CLOUDFLARED_TUNNELID}}
+              key: {{HOMEPAGE_VAR_CLOUDFLARED_API_TOKEN}}
               fields: ["status"]
         - AdGuard Home:
             href: https://adguard.${SECRET_DOMAIN}
@@ -102,7 +102,7 @@ data:
               type: portainer
               url: http://192.168.5.5:9002
               env: 2
-              key: ptr_v9mrSg4g/6Qz/epPVugK8akVgkE46CDTX2IsUjAHIlo=
+              key: {{HOMEPAGE_VAR_PORTAINER_TOKEN}}
         - TrueNAS:
             href: https://nas.${SECRET_DOMAIN}
             icon: truenas-core.png
@@ -110,8 +110,8 @@ data:
             widget:
               type: truenas
               url: http://192.168.5.20
-              username: truenas_admin
-              password: backup
+              username: {{HOMEPAGE_VAR_TRUENAS_USER}}
+              password: {{HOMEPAGE_VAR_TRUENAS_PASS}}
               # key: yourtruenasapikey # not required if using username / password
               enablePools: true # optional, defaults to false
               nasType: scale # defaults to scale, must be set to 'core' if using enablePools with TrueNAS Core
@@ -123,7 +123,7 @@ data:
             widget:
               type: homeassistant
               url: http://home-assistant.default.svc.cluster.local:8123
-              key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI5OTVmYWQ2MDIyNjc0MTU1ODlmYWZlYzAyMWY4ODEzNCIsImlhdCI6MTczNDYwMzgxMCwiZXhwIjoyMDQ5OTYzODEwfQ.hoMH1D1mZp1CO6VZY4cqZfoOPE0hVPKhMyOZCYRtNrg
+              key: {{HOMEPAGE_VAR_HASS_TOKEN}}
   settings.yaml: |
     title: Dashboard
     favicon: https://github.com/walkxcode/dashboard-icons/blob/main/png/heimdall.png
