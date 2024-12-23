@@ -3,75 +3,75 @@
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
-  name: "${APP}-volsync"
+  name: ${APP}-volsync
 spec:
+  dataFrom:
+    - extract:
+        key: volsync-restic
   secretStoreRef:
     kind: ClusterSecretStore
     name: bitwarden-secrets-manager
   target:
-    name: "${APP}-volsync"
+    name: ${APP}-volsync
     template:
-      engineVersion: v2
       data:
-        RESTIC_REPOSITORY: "{{ .REPOSITORY_BUCKET }}/${APP}"
-        RESTIC_PASSWORD: "{{ .RESTIC_PASSWORD }}"
         AWS_ACCESS_KEY_ID: "{{ .ACCESS_KEY }}"
         AWS_SECRET_ACCESS_KEY: "{{ .SECRET_ACCESS_KEY }}"
-  dataFrom:
-    - extract:
-        key: volsync-restic
+        RESTIC_PASSWORD: "{{ .RESTIC_PASSWORD }}"
+        RESTIC_REPOSITORY: "{{ .REPOSITORY_BUCKET }}/${APP}"
+      engineVersion: v2
 ---
 # yaml-language-server: $schema=https://kube-schemas.pages.dev/volsync.backube/replicationdestination_v1alpha1.json
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationDestination
 metadata:
-  name: "${APP}-bootstrap"
+  name: ${APP}-bootstrap
 spec:
-  trigger:
-    manual: restore-once
   restic:
-    repository: "${APP}-volsync"
-    copyMethod: Snapshot
-    volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}"
-    cacheStorageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:-ceph-block}"
+    accessModes: ["${VOLSYNC_SNAP_ACCESSMODES:-ReadWriteOnce}"]
     cacheAccessModes: ["${VOLSYNC_CACHE_ACCESSMODES:-ReadWriteOnce}"]
-    cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:-10Gi}"
-    storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
-    accessModes: ["${VOLSYNC_SNAP_ACCESSMODES:-ReadWriteOnce}"] # Use ReadOnlyMany for CephFS
-    capacity: "${VOLSYNC_CAPACITY:-2Gi}"
-    moverSecurityContext:
-      runAsUser: ${VOLSYNC_PUID:-568}
-      runAsGroup: ${VOLSYNC_PGID:-568}
-      fsGroup: ${VOLSYNC_PGID:-568}
-    enableFileDeletion: true
+    cacheCapacity: ${VOLSYNC_CACHE_CAPACITY:-10Gi}
+    cacheStorageClassName: ${VOLSYNC_CACHE_SNAPSHOTCLASS:-ceph-block}
+    capacity: ${VOLSYNC_CAPACITY:-2Gi}
     cleanupCachePVC: true
     cleanupTempPVC: true
+    copyMethod: Snapshot
+    enableFileDeletion: true
+    moverSecurityContext:
+      fsGroup: ${VOLSYNC_PGID:-1000}
+      runAsGroup: ${VOLSYNC_PGID:-1000}
+      runAsUser: ${VOLSYNC_PUID:-1000}
+    repository: ${APP}-volsync
+    storageClassName: ${VOLSYNC_STORAGECLASS:-ceph-block}
+    volumeSnapshotClassName: ${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}
+  trigger:
+    manual: restore-once
 ---
 # yaml-language-server: $schema=https://kube-schemas.pages.dev/volsync.backube/replicationsource_v1alpha1.json
 apiVersion: volsync.backube/v1alpha1
 kind: ReplicationSource
 metadata:
-  name: "${APP}"
+  name: ${APP}
 spec:
-  sourcePVC: "${CLAIM:-${APP}}"
-  trigger:
-    schedule: "0 * * * *"
   restic:
-    copyMethod: "${VOLSYNC_COPYMETHOD:-Snapshot}"
-    pruneIntervalDays: 10
-    repository: "${APP}-volsync"
-    volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}"
-    cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:-10Gi}"
-    cacheStorageClassName: "${VOLSYNC_CACHE_SNAPSHOTCLASS:-ceph-block}"
+    accessModes: ["${VOLSYNC_SNAP_ACCESSMODES:-ReadWriteOnce}"]
     cacheAccessModes: ["${VOLSYNC_CACHE_ACCESSMODES:-ReadWriteOnce}"]
-    storageClassName: "${VOLSYNC_STORAGECLASS:-ceph-block}"
-    accessModes: ["${VOLSYNC_ACCESSMODES:-ReadWriteOnce}"]
+    cacheCapacity: ${VOLSYNC_CACHE_CAPACITY:-10Gi}
+    cacheStorageClassName: ${VOLSYNC_CACHE_SNAPSHOTCLASS:-ceph-block}
+    copyMethod: ${VOLSYNC_COPYMETHOD:-Snapshot}
     moverSecurityContext:
-      runAsUser: ${VOLSYNC_PUID:-568}
-      runAsGroup: ${VOLSYNC_PGID:-568}
-      fsGroup: ${VOLSYNC_PGID:-568}
+      fsGroup: ${VOLSYNC_PGID:-1000}
+      runAsGroup: ${VOLSYNC_PGID:-1000}
+      runAsUser: ${VOLSYNC_PUID:-1000}
+    pruneIntervalDays: 10
+    repository: ${APP}-volsync
     retain:
-      hourly: 24
       daily: 10
-      weekly: 5
+      hourly: 24
       monthly: 3
+      weekly: 5
+    storageClassName: ${VOLSYNC_STORAGECLASS:-ceph-block}
+    volumeSnapshotClassName: ${VOLSYNC_SNAPSHOTCLASS:-csi-ceph-blockpool}
+  sourcePVC: ${CLAIM:-${APP}}
+  trigger:
+    schedule: 0 * * * *

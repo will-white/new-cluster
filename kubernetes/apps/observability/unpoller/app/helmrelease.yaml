@@ -57,9 +57,9 @@ spec:
               readOnlyRootFilesystem: true
     defaultPodOptions:
       securityContext:
-        runAsGroup: 65534
+        runAsGroup: 1000
         runAsNonRoot: true
-        runAsUser: 65534
+        runAsUser: 1000
         seccompProfile:
           type: RuntimeDefault
     service:
