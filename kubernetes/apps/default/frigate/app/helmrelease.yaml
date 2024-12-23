@@ -94,7 +94,6 @@ spec:
           gethomepage.dev/description: NVR with realtime local object detection for IP cameras
           gethomepage.dev/group: Applications
           gethomepage.dev/icon: frigate.png
-          gethomepage.dev/href: http://frigate.default
         className: internal
         enabled: true
         hosts:
