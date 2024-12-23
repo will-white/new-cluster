@@ -25,9 +25,9 @@ spec:
     substitute:
       APP: *app
       GATUS_SUBDOMAIN: torrents
-      VOLSYNC_CAPACITY: 2Gi
-      VOLSYNC_ACCESSMODES: ReadWriteMany
-      VOLSYNC_SNAP_ACCESSMODES: ReadOnlyMany # CephFS shallow snapshot
+      # VOLSYNC_CAPACITY: 2Gi
+      # VOLSYNC_ACCESSMODES: ReadWriteMany
+      # VOLSYNC_SNAP_ACCESSMODES: ReadOnlyMany # CephFS shallow snapshot
 # ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
