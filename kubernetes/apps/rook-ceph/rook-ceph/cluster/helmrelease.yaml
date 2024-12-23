@@ -11,7 +11,7 @@ spec:
         kind: HelmRepository
         name: rook-ceph
         namespace: flux-system
-      version: v1.16.0
+      version: v1.15.6
   dependsOn:
     - name: rook-ceph-operator
       namespace: rook-ceph
@@ -48,7 +48,7 @@ spec:
             csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
             csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
             imageFeatures: layering,fast-diff,object-map,deep-flatten,exclusive-lock
-            imageFormat: '2'
+            imageFormat: "2"
           reclaimPolicy: Delete
           volumeBindingMode: Immediate
     cephBlockPoolsVolumeSnapshotClass:
@@ -102,7 +102,7 @@ spec:
       #       memory: 512Mi
       storage:
         config:
-          osdsPerDevice: '1'
+          osdsPerDevice: "1"
         deviceFilter: nvme0n1
         useAllDevices: true
         useAllNodes: true
@@ -161,8 +161,8 @@ spec:
       - ingress:
           annotations:
             external-dns.alpha.kubernetes.io/target: internal.${SECRET_DOMAIN}
-            nginx.ingress.kubernetes.io/proxy-body-size: '0'
-            nginx.ingress.kubernetes.io/proxy-request-buffering: 'off'
+            nginx.ingress.kubernetes.io/proxy-body-size: "0"
+            nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
           enabled: true
           host:
             name: rgw.${SECRET_DOMAIN}
