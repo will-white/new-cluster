@@ -1,3 +1,9 @@
+auth:
+  enabled: false
+
+tls:
+  enabled: false
+
 mqtt:
   host: emqx.default.svc.cluster.local
   topic_prefix: frigate
@@ -52,11 +58,11 @@ cameras:
       output_args:
         record: preset-record-generic-audio-copy
       inputs:
-          input_args: preset-rtsp-restream
-          roles:
-            - record
-            - detect
-            - audio # <- only necessary if audio detection is enabled
+        input_args: preset-rtsp-restream
+        roles:
+          - record
+          - detect
+          - audio # <- only necessary if audio detection is enabled
     # detect:
     #   width: 640
     #   height: 480
