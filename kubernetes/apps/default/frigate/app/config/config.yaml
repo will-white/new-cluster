@@ -86,6 +86,17 @@ cameras:
             - record
             - detect
             - audio # <- only necessary if audio detection is enabled
+  amcrest1:
+    ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-copy
+      inputs:
+        - path: rtsp://go2rtc.default.svc.cluster.local:8554/amcrest1 # <--- the name here must match the name of the camera in restream
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+            - detect
+            - audio # <- only necessary if audio detection is enabled
     # detect:
     #   width: 640
     #   height: 480
