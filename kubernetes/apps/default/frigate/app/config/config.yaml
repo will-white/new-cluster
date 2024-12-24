@@ -32,7 +32,7 @@ snapshots:
 record:
   enabled: true
   retain:
-    days: 7
+    days: 2
     mode: motion
   events:
     retain:
