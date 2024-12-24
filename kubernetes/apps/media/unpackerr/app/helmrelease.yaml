@@ -36,9 +36,9 @@ spec:
               UN_WEBSERVER_LOG_FILE: /logs/webserver.log
               UN_ACTIVITY: true
               UN_SONARR_0_URL: http://sonarr.media.svc.cluster.local
-              UN_SONARR_0_PATHS_0: /Downloads/complete/sonarr
+              UN_SONARR_0_PATHS_0: /Downloads/sonarr
               UN_RADARR_0_URL: http://radarr.media.svc.cluster.local
-              UN_RADARR_0_PATHS_0: /Downloads/complete/radarr
+              UN_RADARR_0_PATHS_0: /Downloads/radarr
             envFrom:
               - secretRef:
                   name: unpackerr-secret
