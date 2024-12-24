@@ -121,7 +121,7 @@ spec:
             readOnly: true
       media:
         type: nfs
-        server: 192.168.5.20
+        server: ${NAS_URI}
         path: /mnt/main/frigate
         globalMounts:
           - path: /media/frigate

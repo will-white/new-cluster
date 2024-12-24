@@ -49,14 +49,15 @@ spec:
             envFrom:
               - secretRef:
                   name: qbtools-secret
-            args: [
-              "tagging",
-              "--added-on",
-              "--expired",
-              "--last-activity",
-              "--sites",
-              "--unregistered"
-            ]
+            args:
+              [
+                "tagging",
+                "--added-on",
+                "--expired",
+                "--last-activity",
+                "--sites",
+                "--unregistered",
+              ]
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -70,25 +71,33 @@ spec:
           unregistered:
             <<: *container
             args: [
-              "prune",
-              "--exclude-category", "manual",
-              "--exclude-category", "music",
-              "--exclude-tag", "added:1d",
-              "--include-tag", "unregistered",
-              "--with-data"
-              # "--dry-run"
-            ]
+                "prune",
+                "--exclude-category",
+                "manual",
+                "--exclude-category",
+                "music",
+                "--exclude-tag",
+                "added:1d",
+                "--include-tag",
+                "unregistered",
+                "--with-data",
+                # "--dry-run"
+              ]
           expired:
             <<: *container
             args: [
-              "prune",
-              "--exclude-category", "manual",
-              "--exclude-category", "music",
-              "--exclude-tag", "added:1d",
-              "--include-tag", "expired",
-              "--with-data"
-              # "--dry-run"
-            ]
+                "prune",
+                "--exclude-category",
+                "manual",
+                "--exclude-category",
+                "music",
+                "--exclude-tag",
+                "added:1d",
+                "--include-tag",
+                "expired",
+                "--with-data",
+                # "--dry-run"
+              ]
         pod:
           restartPolicy: Never
       orphaned:
@@ -101,31 +110,34 @@ spec:
           app:
             <<: *container
             args: [
-              "orphaned",
-              "--exclude-pattern", "*_unpackerred*",
-              # "--dry-run"
-            ]
+                "orphaned",
+                "--exclude-pattern",
+                "*_unpackerred*",
+                # "--dry-run"
+              ]
         pod:
           restartPolicy: Never
       reannounce:
         containers:
           app:
             <<: *container
-            args: [
-              "reannounce",
-              "--process-seeding"
-            ]
+            args: ["reannounce", "--process-seeding"]
       limiter:
         containers:
           app:
             <<: *container
-            args: [
-              "limiter",
-              "--max-line-speed-mbps", "100",
-              "--max-percent", "0.8",
-              "--limit-percent", "0.4",
-              "--interval", "5"
-            ]
+            args:
+              [
+                "limiter",
+                "--max-line-speed-mbps",
+                "100",
+                "--max-percent",
+                "0.8",
+                "--limit-percent",
+                "0.4",
+                "--interval",
+                "5",
+              ]
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -142,8 +154,8 @@ spec:
             readOnly: true
       media:
         type: nfs
-        server: expanse.internal
-        path: /mnt/eros/Media
+        server: ${NAS_URI}
+        path: /mnt/main/media
         advancedMounts:
           orphaned:
             app:

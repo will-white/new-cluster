@@ -35,9 +35,9 @@ spec:
               UN_WEBSERVER_METRICS: true
               UN_WEBSERVER_LOG_FILE: /logs/webserver.log
               UN_ACTIVITY: true
-              UN_SONARR_0_URL: http://sonarr.default.svc.cluster.local
+              UN_SONARR_0_URL: http://sonarr.media.svc.cluster.local
               UN_SONARR_0_PATHS_0: /media/Downloads/qbittorrent/complete/sonarr
-              UN_RADARR_0_URL: http://radarr.default.svc.cluster.local
+              UN_RADARR_0_URL: http://radarr.media.svc.cluster.local
               UN_RADARR_0_PATHS_0: /media/Downloads/qbittorrent/complete/radarr
             envFrom:
               - secretRef:
@@ -82,10 +82,10 @@ spec:
     persistence:
       logs:
         type: emptyDir
-      # media:
-      #   type: nfs
-      #   server: expanse.internal
-      #   path: /mnt/eros/Media
-      #   globalMounts:
-      #     - path: /media/Downloads/qbittorrent
-      #       subPath: Downloads/qbittorrent
+      media:
+        type: nfs
+        server: ${NAS_URI}
+        path: /mnt/main/media
+        globalMounts:
+          - path: /media/Downloads/qbittorrent
+            subPath: Downloads/qbittorrent

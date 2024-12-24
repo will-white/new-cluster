@@ -120,9 +120,9 @@ spec:
             readOnly: true
       tmp:
         type: emptyDir
-      # media:
-      #   type: nfs
-      #   server: expanse.internal
-      #   path: /mnt/eros/Media
-      #   globalMounts:
-      #     - path: /media
+      media:
+        type: nfs
+        server: ${NAS_URI}
+        path: /mnt/main/media
+        globalMounts:
+          - path: /media
