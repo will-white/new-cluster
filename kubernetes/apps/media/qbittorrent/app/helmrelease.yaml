@@ -121,5 +121,5 @@ spec:
         server: ${NAS_IP}
         path: /mnt/main/media
         globalMounts:
-          - path: /media/Downloads/qbittorrent
-            subPath: Downloads/qbittorrent
+          - path: /Downloads
+            subPath: Downloads
