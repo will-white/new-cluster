@@ -27,10 +27,10 @@ spec:
       replicas: 2
     storageClass:
       create: true
-      name: nas-nfs
+      name: nfs-slow
       parameters:
-        server: ${NAS_URI}
-        share: /mnt/main/kubernetes
+        server: expanse.internal
+        share: /mnt/eros/Kubernetes
       mountOptions:
         - nfsvers=4.2
         - nconnect=16
