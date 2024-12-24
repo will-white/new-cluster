@@ -5,7 +5,7 @@ metadata:
 spec:
   staticConfigs:
     - targets:
-        - ${NAS_URI}:9100
+        - ${NAS_IP}:9100
         - pikvm.internal:9100
   metricsPath: /metrics
   relabelings:
@@ -20,7 +20,7 @@ metadata:
 spec:
   staticConfigs:
     - targets:
-        - ${NAS_URI}:9633
+        - ${NAS_IP}:9633
   metricsPath: /metrics
   relabelings:
     - action: replace

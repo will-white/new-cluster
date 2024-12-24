@@ -154,7 +154,7 @@ spec:
             readOnly: true
       media:
         type: nfs
-        server: ${NAS_URI}
+        server: ${NAS_IP}
         path: /mnt/main/media
         advancedMounts:
           orphaned:
